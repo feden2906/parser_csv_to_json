@@ -13,6 +13,10 @@ module.exports = {
     ],
     plugins: [],
     rules: {
+        semi: [
+            'error',
+            'always'
+        ],
         'array-bracket-newline': [
             'error',
             { minItems: 2 },
@@ -36,7 +40,7 @@ module.exports = {
         'global-require': 'off',
         indent: [
             'warn',
-            4,
+            2,
             { SwitchCase: 1 },
         ],
         'linebreak-style': 'off',
