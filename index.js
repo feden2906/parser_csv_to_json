@@ -2,8 +2,6 @@
 const csv = require('csvtojson');
 const fs = require('fs');
 
-// const results = [];
-
 const dateBuilder = (date) => date
   .split('/')
   .reverse()
@@ -15,7 +13,7 @@ const dataNormalizer = (item) => {
     first_name, last_name, cc, amount, date
   } = item;
 
-  const a = {
+  return {
     name: `${last_name} ${first_name}`,
     phone: String,
     person: {
@@ -26,7 +24,6 @@ const dataNormalizer = (item) => {
     date: dateBuilder(date),
     costCenterNum: cc.slice(3)
   };
-return a;
 };
 
 const readStream = fs.createReadStream('./input_data/users2.csv');
@@ -49,17 +46,12 @@ readStream.pipe(csv(csvConfig))
       return;
     }
 
-    chunk = chunk.toString();
-    chunk = chunk.slice(0, chunk.length - 2);
-    chunk = JSON.parse(chunk);
-    console.log(chunk);
-    const a = dataNormalizer(chunk);
+    const data = JSON.parse(chunk.toString().slice(0, chunk.length - 2));
 
-    console.log(a)
+    const a = dataNormalizer(data);
+
     writeStream.write(`${JSON.stringify(a)},`);
   })
   .on('end', () => {
     console.log('Finish');
   }).then(() => {});
-
-// readStream.pipe(writeStream);
