@@ -32,7 +32,17 @@ return a;
 const readStream = fs.createReadStream('./input_data/users2.csv');
 const writeStream = fs.createWriteStream('./output_data/users.json');
 
-readStream.pipe(csv({ delimiter: '||', toArrayString: true, downstreamFormat: 'array' }))
+const csvConfig = {
+  delimiter: '||',
+  toArrayString: true,
+  downstreamFormat: 'array',
+  colParser: {
+    amount: 'number',
+    date: 'Date'
+  }
+};
+
+readStream.pipe(csv(csvConfig))
   .on('data', (chunk) => {
     if (chunk.length <= 2) {
       writeStream.write(chunk);
