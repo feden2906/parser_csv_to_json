@@ -32,26 +32,28 @@ const writeStream = fs.createWriteStream('./output_data/users.json');
 const csvConfig = {
   delimiter: '||',
   toArrayString: true,
-  downstreamFormat: 'array',
+  // downstreamFormat: 'array',
   colParser: {
     amount: 'number',
     date: 'Date'
   }
 };
-
+writeStream.write('[')
 readStream.pipe(csv(csvConfig))
+  .once('data', () => writeStream.write('['))
   .on('data', (chunk) => {
-    if (chunk.length <= 2) {
-      writeStream.write(chunk);
-      return;
-    }
+    // if (chunk.length <= 2) {
+    //   writeStream.write(chunk);
+    //   return;
+    // }
 
-    const data = JSON.parse(chunk.toString().slice(0, chunk.length - 2));
+    const data = JSON.parse(chunk.toString());
 
     const a = dataNormalizer(data);
 
     writeStream.write(`${JSON.stringify(a)},`);
   })
   .on('end', () => {
+    writeStream.write(']');
     console.log('Finish');
   }).then(() => {});
